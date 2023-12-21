@@ -1,0 +1,14 @@
+
+i
+java:S20954"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(îƒéÚ8öæÎìÈ1
+a
+java:S2095$"EUse try-with-resources or close this "Scanner" in a "finally" clause.(¥ÿÓ+8ÍÿÆìÈ1
+_
+java:S1659!"BDeclare "green" and all following declarations on a separate line.(šßœõ8ĞÿÆìÈ1
+>	java:S131'""Add a default case to this switch.(ÜÚ¹°8ÑÿÆìÈ1
+[
+java:S1128"9Remove this unused import 'java.io.ByteArrayInputStream'.(Ëôæ±ûÿÿÿÿ8ƒçÎìÈ1
+M
+java:S1128"0Remove this unused import 'java.io.InputStream'.(¹»º8ƒçÎìÈ1
+O
+java:S1128"-Remove this unused import 'java.util.Locale'.(åğ×±ûÿÿÿÿ8ƒçÎìÈ1

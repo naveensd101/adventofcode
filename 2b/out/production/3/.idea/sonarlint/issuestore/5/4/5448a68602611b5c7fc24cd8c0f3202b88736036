@@ -1,0 +1,8 @@
+
+i
+java:S20951"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(îƒéÚ8’¡ÄíÈ1
+a
+java:S2095!"EUse try-with-resources or close this "Scanner" in a "finally" clause.(¥ÿÓ+8’¡ÄíÈ1
+_
+java:S1659"BDeclare "green" and all following declarations on a separate line.(šßœõ8™¡ÄíÈ1
+>	java:S131$""Add a default case to this switch.(ÜÚ¹°8¡ÄíÈ1
