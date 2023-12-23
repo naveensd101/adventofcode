@@ -1,0 +1,25 @@
+
+v
+java:S2293G"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÖúúÕ8¸º›¦É1
+>
+java:S16439"Use a StringBuilder instead.(ÌÑ¸ ûÿÿÿÿ8¹º›¦É1
+E
+java:S5411+"(Use a primitive boolean expression here.(ì™Ù8Â¶µ¦É1
+J
+java:S5411^"(Use a primitive boolean expression here.(€Ù£Åÿÿÿÿÿ8¹º›¦É1
+n
+java:S2095B"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(†áûÿÿÿÿ8ô»›¦É1
+s
+java:S3008"QRename this field "Engine" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ªÔ±’ùÿÿÿÿ8õ»›¦É1
+n
+java:S3008"QRename this field "Layout" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—¯§8õ»›¦É1
+c
+java:S1126"AReplace this if-then-else statement by a single return statement.(Á·÷‚ûÿÿÿÿ8÷»›¦É1
+^
+java:S1126"AReplace this if-then-else statement by a single return statement.(àÈÚ¹8÷»›¦É1
+8
+java:S3626"Remove this redundant jump.(ûÁİ…8ø»›¦É1
+O
+java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ8ç·µ¦É1
+S
+java:S1128"1Remove this unused import 'java.util.Collection'.(¹ÉĞšùÿÿÿÿ8ç·µ¦É1
