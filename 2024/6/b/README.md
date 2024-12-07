@@ -1,0 +1,2 @@
+- brute.py is the file that finally gave the correct answer
+- we tried few other approaches in rest of the files, but to no use
