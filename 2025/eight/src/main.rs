@@ -1,8 +1,9 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashSet;
 
 use text_io::read;
 
-fn dist(pt1: (i32, i32, i32), pt2: (i32, i32, i32)) -> f64 {
+// unlike cpp rust gives me error for overflows, this is really handy
+fn dist(pt1: (i64, i64, i64), pt2: (i64, i64, i64)) -> f64 {
     ((
         (pt1.0 - pt2.0) * (pt1.0 - pt2.0)
         +
@@ -14,7 +15,7 @@ fn dist(pt1: (i32, i32, i32), pt2: (i32, i32, i32)) -> f64 {
 
 fn main() {
     let n: usize = read!();
-    let mut points: Vec<(i32, i32, i32)> = vec![];
+    let mut points: Vec<(i64, i64, i64)> = vec![];
 
     for _ in 0..n {
         let line: String = read!();
@@ -40,57 +41,59 @@ fn main() {
     }
     dists.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
+    // for i in 0..n {
+    //     println!("{}. {:?}", i, points[i]);
+    // }
+    // for i in 0..10 {
+    //     println!("{}. {}, {:?}", i, dists[i].0, dists[i].1);
+    // }
+
+    // build adjacentcy matrix
+    let mut adj: Vec<Vec<bool>> = vec![vec![false; n]; n];
+    for i in 0..1000 {
+        adj[dists[i].1.0][dists[i].1.1] = true;
+        adj[dists[i].1.1][dists[i].1.0] = true;
+    }
+
+    let mut visited: HashSet<usize> = HashSet::new();
+    let mut all_connected: Vec<HashSet<usize>> = vec![];
     for i in 0..n {
-        println!("{}. {:?}", i, points[i]);
-    }
-    for i in 0..10 {
-        println!("{}. {}, {:?}", i, dists[i].0, dists[i].1);
-    }
-
-    let mut group_map: HashMap<usize, i32> = HashMap::new();
-    let mut group_num = 0;
-    let mut connection_counter = 0;
-    let mut dist_idx: usize = 0;
-    while connection_counter < 10 {
-        // connect the junction boxes present at dist_idx
-        let dist = dists[dist_idx];
-        dist_idx += 1;
-
-        if group_map.contains_key(&dist.1.0) && group_map.contains_key(&dist.1.1) {
+        if visited.contains(&i) {
             continue;
-        } else if group_map.contains_key(&dist.1.0) {
-            connection_counter += 1;
-            group_map.insert(
-                dist.1.1,
-                // I am just fighting with the compiler, 
-                // I barely understand what to_owned is doing under the hood
-                // Ill eventually learn it ¯\_(ツ)_/¯
-                group_map.get(&dist.1.0).unwrap().to_owned()
-            );
-        } else if group_map.contains_key(&dist.1.1) {
-            connection_counter += 1;
-            group_map.insert(
-                dist.1.0,
-                group_map.get(&dist.1.1).unwrap().to_owned()
-            );
-        } else {
-            connection_counter += 1;
-            group_map.insert(
-                dist.1.0,
-                group_num
-            );
-            group_map.insert(
-                dist.1.1,
-                group_num
-            );
-            group_num += 1;
         }
+
+        let mut current: Vec<usize> = vec![];
+        current.push(i);
+        let mut connected_component: HashSet<usize> = HashSet::new();
+        while !current.is_empty() {
+            let cur = current.pop().unwrap();
+            if visited.contains(&cur) { continue; }
+            visited.insert(cur);
+            connected_component.insert(cur);
+            for j in 0..n {
+                if adj[cur][j] {
+                    current.push(j);
+                    connected_component.insert(j);
+                }
+            }
+        }
+        all_connected.push(connected_component);
     }
 
-    let mut reverse_map: HashMap<i32, Vec<usize>> = HashMap::new();
-    for vals in group_map {
-        if let Some(lst) = reverse_map.get(&vals.1) {
-            (*lst).push(vals.0)
-        }
+    println!("{:?}", all_connected);
+
+    // (# of junction box, count of circuits with that count)
+    let mut freq: Vec<usize> = vec![];
+    for component in all_connected {
+        freq.push(component.len());
     }
+
+    freq.sort();
+    freq.reverse();
+    println!("{:?}", freq);
+    let mut ans: usize = 1;
+    for i in 0..3 {
+        ans *= freq[i];
+    }
+    println!("ans = {ans}");
 }
