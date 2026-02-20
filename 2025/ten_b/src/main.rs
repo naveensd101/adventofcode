@@ -1,98 +1,120 @@
-#![allow(dead_code)]
-use std::i32;
-use std::cmp::min;
-use std::collections::HashMap;
-use text_io::read;
-
-#[derive(Debug)]
-struct Manual {
-    required_config: i32,
-    buttons: Vec<Vec<i32>>,
-    joltage: Vec<i32>
-}
-
-fn does_vector_have_negative_number(arr: &Vec<i32>) -> bool {
-    for el in arr {
-        if *el < 0 {
-            return true
-        }
-    }
-    false
-}
-
-fn are_all_vals_zero(arr: &Vec<i32>) -> bool {
-    for el in arr {
-        if *el != 0 {
-            return false
-        }
-    }
-    true
-}
-
-fn reader() -> Manual {
-    let mut manual: Manual = Manual { required_config: 0, buttons: vec![], joltage: vec![] };
-    loop {
-        let word: String = read!(); // read! will read stdin untill it finds a white space
-        let ch: char = word.chars().next().unwrap();
-        
-        if ch == '[' {
+#[allow(unused)]
+fn find_sum_except_i_for_bulb(
+    bulb_id: i32, 
+    i: usize, 
+    state: Vec<Option<i32>>, 
+    buttons: Vec<Vec<i32>>
+) -> Option<i32> {
+    // state has got the clicks of each button in buttons list
+    let mut sum: i32 = 0;
+    for (idx, button) in buttons.iter().enumerate() {
+        if idx == i {
             continue;
-        } else if ch == '(' {
-            // word will be something like (0, 1, 3)
-            let csv: String = word[1..word.len()-1].to_owned();
-            let num_vector: Vec<i32> = csv.split(",").map(|x| x.parse::<i32>().unwrap()).collect();
-            manual.buttons.push(num_vector);
-        } else if ch == '{' {
-            let csv: String = word[1..word.len()-1].to_owned();
-            let num_vector: Vec<i32> = csv.split(",").map(|x| x.parse::<i32>().unwrap()).collect();
-            manual.joltage = num_vector;
-            break;
+        }
+        for bulb in button {
+            if *bulb == bulb_id {
+                if state[idx].is_none() {
+                    return None;
+                } else {
+                    sum += state[idx].unwrap()
+                }
+            }
         }
     }
-
-    manual
-}
-
-fn f(manual: &Manual, memory: &mut HashMap<Vec<i32>, i32>) -> i32 {
-    println!("{:?}", manual);
-    println!("{:?}", memory);
-    let jolts = manual.joltage.clone();
-    if are_all_vals_zero(&jolts) {
-        return 0;
-    }
-    if does_vector_have_negative_number(&jolts) {
-        return i32::MAX/2;
-    }
-
-    if memory.contains_key(&manual.joltage) {
-        return *memory.get(&manual.joltage).unwrap();
-    }
-
-    let mut min_ans = i32::MAX;
-    for button in manual.buttons.clone() {
-        let mut new_jolts = manual.joltage.clone(); //make a copy of joltages
-        for idx in button {
-            new_jolts[idx as usize] -= 1;
-        }
-        min_ans = min(min_ans, 
-            1 + f(
-                &Manual { required_config: 0, buttons: manual.buttons.clone(), joltage: new_jolts },
-                memory
-            )
-        )
-    }
-    memory.insert(manual.joltage.clone(), min_ans);
-    min_ans
+    Some(sum)
 }
 
 fn main() {
-    let mut memory: HashMap<Vec<i32>, i32> = HashMap::new();
+    let bulb_joltage_req: Vec<i32> = vec![3, 5, 4, 7];
+    let buttons: Vec<Vec<i32>> = vec![
+        vec![3],
+        vec![1, 3],
+        vec![2],
+        vec![2, 3],
+        vec![0, 2],
+        vec![0, 1],
+    ];
+    let _n = buttons.len();
+    let _m = bulb_joltage_req.len();
+}
 
-    let n: usize = read!();
-    let mut ans: i32 = 0;
-    for i in 0..n {
-        println!("{i}");
-        ans += f(&reader(), &mut memory);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sum_finder_1() {
+        let bulb_id = 0;
+        let i = 4;
+        let state = vec![
+            None,
+            None,
+            None,
+            None,
+            None,
+            Some(3)
+        ];
+        let buttons: Vec<Vec<i32>> = vec![
+            vec![3],
+            vec![1, 3],
+            vec![2],
+            vec![2, 3],
+            vec![0, 2],
+            vec![0, 1],
+        ];
+        let result = find_sum_except_i_for_bulb(bulb_id, i, state, buttons);
+        assert_eq!(Some(3), result);
     }
-    println!("{:?}", ans);
+
+    #[test]
+    fn test_sum_finder_2() {
+        //x2 + x3 + x4 = 4
+        //for bulb_id = 2
+        let bulb_id = 2;
+        let i = 4;
+        let state = vec![
+            /*0*/None,
+            /*1*/None,
+            /*2*/Some(3),
+            /*3*/Some(4),
+            /*4*/None,
+            /*5*/None
+        ];
+        let buttons: Vec<Vec<i32>> = vec![
+            /*0*/vec![3],
+            /*1*/vec![1, 3],
+            /*2*/vec![2],
+            /*3*/vec![2, 3],
+            /*4*/vec![0, 2],
+            /*5*/vec![0, 1],
+        ];
+        let result = find_sum_except_i_for_bulb(bulb_id, i, state, buttons);
+        assert_eq!(Some(7), result);
+    }
+
+    #[test]
+    fn test_sum_finder_3() {
+        //x2 + x3 + x4 = 4
+        //for bulb_id = 2
+        let bulb_id = 2;
+        let i = 4;
+        let state = vec![
+            /*0*/None,
+            /*1*/None,
+            /*2*/Some(3),
+            /*3*/None,
+            /*4*/None,
+            /*5*/None
+        ];
+        let buttons: Vec<Vec<i32>> = vec![
+            /*0*/vec![3],
+            /*1*/vec![1, 3],
+            /*2*/vec![2],
+            /*3*/vec![2, 3],
+            /*4*/vec![0, 2],
+            /*5*/vec![0, 1],
+        ];
+        let result = find_sum_except_i_for_bulb(bulb_id, i, state, buttons);
+        assert_eq!(None, result);
+    }
 }
